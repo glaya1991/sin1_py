@@ -1,0 +1,149 @@
+import matplotlib.pyplot as plt
+import math
+import numpy as np
+import  time
+from matplotlib.widgets import Button
+
+# import data_comport
+# import data_comport_full
+
+Fs = 200
+f1 = 10
+N_T = int(Fs / f1)  # Number of points per 1 period
+N = 128  # 2*N_T
+#N = 4 * N_T
+x = []
+y = []
+print("N = %d\n", N)
+
+max32 = 4294967295
+
+pow2to32 = 4294967296
+pow2to24 = 16777216
+pow2to16 = 65536
+pow2to8 = 256
+
+fig, ax = plt.subplots()
+freqs = np.arange(2, 20, 3)
+t = np.arange(0.0, 1.0, 0.001)
+s = np.sin(2*np.pi*freqs[0]*t)
+l, = plt.plot(x, y, lw=2)
+
+class Index(object):
+    ind = 0
+
+    def next(self, event):
+        self.ind += 1
+        ifreq = self.ind % len(freqs)
+        #ydata = np.sin(2*np.pi*freqs[ifreq]*t)
+        ydata = [(100 * (math.sin(2 * math.pi * (freqs[ifreq] / Fs) * i))) for i in range(N)]
+        l.set_ydata(ydata)
+        plt.draw()
+
+    def prev(self, event):
+        self.ind -= 1
+        ifreq = self.ind % len(freqs)
+        #ydata = np.sin(2*np.pi*freqs[ifreq]*t)
+        ydata = [(100 * (math.sin(2 * math.pi * (freqs[ifreq] / Fs) * i))) for i in range(N)]
+        l.set_ydata(ydata)
+        plt.draw()
+
+
+
+itime = range(N)
+signal = [(100 * (math.sin(2 * math.pi * (f1 / Fs) * i))) for i in range(N)]
+
+# file1 = open("sin123.txt", "w")
+# for i in range(N):
+#     # print(val, ', ')
+#     file1.write("%3.2f, " % signal[i])
+#     if (i + 1) % 16 == 0: file1.write("\r\n")
+# file1.close()
+
+x.extend(itime)
+y.extend(signal)
+
+xmax = max(x)
+xmin = 0
+ymax = max(y)
+ymin = min(y)
+
+print('x_max ', xmax)
+print('y_max= ', ymax)
+print('y_min= ', ymin)
+
+plt.xlim(0, xmax)
+plt.ylim(int(ymin*1.5), int(ymax*1.5))
+l.set_xdata(x)
+l.set_ydata(y)
+
+
+callback = Index()
+axprev = plt.axes([0.7, 0.05, 0.1, 0.075])
+axnext = plt.axes([0.81, 0.05, 0.1, 0.075])
+bnext = Button(axnext, 'Next')
+bnext.on_clicked(callback.next)
+bprev = Button(axprev, 'Previous')
+bprev.on_clicked(callback.prev)
+plt.show()
+
+'''
+fig = plt.figure()
+ax1 = plt.axes()
+plt.plot(x, y, color='blue', linewidth=0.8)
+plt.xlim(0, xmax)
+plt.ylim(ymin, ymax)
+plt.draw()
+plt.pause(0.01)
+
+fig1 = plt.figure("Sp")
+sp = np.fft.fft(y)
+sp_norm = [2*abs(i)/N for i in sp]
+df = Fs/(N)
+f = [i*df for i in x]
+plt.plot(f, sp_norm, color='blue', linewidth=0.8)
+plt.xlim(0, max(f))
+plt.ylim(0, max(sp_norm)*1.5)
+print('df=',df)
+plt.draw()
+plt.pause(0.01)
+
+print('test1123')
+
+plt.show()
+'''
+
+
+'''
+dx = int((xmax)/4);
+for i in range(4):
+    plt.axvline(((i+1)*dx)-1, color='grey', linewidth=0.2)
+    print(((i+1)*dx)-1)
+
+plt.axvline(200, color='red', linewidth=0.4)
+
+dy = int((ymax-ymin)/10);
+for i in range(10):
+	plt.axhline(ymin+i*dy, color='grey', linewidth = 0.2)
+
+plt.figure(2)
+# fig = plt.figure(2)
+print('f=', df*sp_norm.index(max(sp_norm[0:200])))
+plt.plot(f[0:100], sp_norm[0:100], color='blue', linewidth=0.8)
+plt.xlim(0, 100*df)
+plt.ylim(0, ymax)
+
+dx = int(100/10);
+for i in range(10):
+    plt.axvline(((i+1)*dx*df), color='grey', linewidth=0.2)
+    print(((i+1)*dx)*df)
+'''
+
+'''
+plt.plot(sig_time[0:len2-1], sig[0:len2-1], color='blue', linewidth=0.8)
+'''
+
+# ~ plt.figure(4)
+# ~ plt.plot(block_num, color='red', linewidth=0.8)
+
+
